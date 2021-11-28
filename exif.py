@@ -14,4 +14,13 @@ def get_date(file):
 	try:
 		return datetime.strptime(str(tags['EXIF DateTimeOriginal'].values), '%Y:%m:%d %H:%M:%S')
 	except:
-		return datetime.fromtimestamp(files.creation_time(file))
+		pass
+	try:
+		return datetime.strptime(str(tags['EXIF MediaCreateDate'].values), '%Y:%m:%d %H:%M:%S')
+	except:
+		pass
+	try:
+		return datetime.strptime(str(tags['EXIF CreateDate'].values), '%Y:%m:%d %H:%M:%S')
+	except:
+		pass
+	return datetime.fromtimestamp(files.creation_time(file))
