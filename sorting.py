@@ -1,0 +1,1 @@
+import exifdef with_dates(filepaths):	return [(path, exif.get_date(str(path))) for path in filepaths]def sort_by_date(filepaths):	having_dates=with_dates(filepaths)	having_dates.sort(key=lambda pair: pair[1])	return [pair[0] for pair in having_dates]
