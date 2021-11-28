@@ -24,12 +24,18 @@ def rename_all(folder):
 def sort_subfolders(folder):
 	for subfolder in files.get_subdirectories(folder):
 		sort_all(subfolder)
-	print('Everythinh finished!')
+	print('Everything finished!')
+	
+def rename_subfolders(folder):
+	for subfolder in files.get_subdirectories(folder):
+		rename_all(subfolder)
+	print('Everything finished!')
 
 def print_help():
 	print('sort <F>    sort images in the <F> folder by date and rename them as numbers')
 	print('sort+ <F>   sort images in all subfolders of the <F> folder by date and rename them as numbers')
 	print('num <F>     rename images in the <F> folder as numbers preserving their order')
+	print('num+ <F>    rename images in all subfolders of the <F> folder as numbers preserving their order')
 	print('files <F>   list files in the <F> folder')
 	print('folders <F> list subfolders of the <F> folder')
 	print('quit        quit the program')
@@ -54,6 +60,8 @@ def loop():
 		elif cmd=='sort+':
 			sort_subfolders(pathlib.Path(par))
 		elif cmd=='num':
+			rename_all(pathlib.Path(par))
+		elif cmd=='num+':
 			rename_all(pathlib.Path(par))
 		elif cmd=='folders':
 			subdirs=files.get_subdirectories(pathlib.Path(par))
