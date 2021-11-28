@@ -8,7 +8,7 @@ def sort_all(folder):
 	filepaths=files.get_folder_files(folder)
 	
 	print('Sorting', folder)
-	sorting.sort_by_date(filepaths)
+	filepaths=sorting.sort_by_date(filepaths)
 		
 	print('Renaming', folder)
 	renaming.rename_to_numbers(filepaths)
