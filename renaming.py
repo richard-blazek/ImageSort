@@ -1,22 +1,31 @@
-import files
+import files, exif, strnum
 
-def digit_count(num):
-	return len(str(num))
+def sorted_with_timestamps(paths):
+	with_timestamps = exif.with_timestamps(paths)
+	with_timestamps.sort(key = lambda pair: pair[1])
+	return with_timestamps
 
-def get_zero_padding_format_string(zeros):
-	return '{:0'+str(zeros)+'d}'
+def count_same_times(images):
+	result = []
+	same_max = 1
+	last_i = 0
+	last_same = 0
+	for i, (path, timestamp) in enumerate(images):
+		if timestamp == images[last_i][1]:
+			last_same += 1
+			same_max = max(same_max, last_same)
+		else:
+			last_i = i
+			last_same = 1
+		result.append((path, timestamp, last_same))
+	return same_max, result
 
-def zero_padding(zeros, num):
-	return get_zero_padding_format_string(zeros).format(num)
-
-def file_number_name(size, number, suffix):
-	return zero_padding(size, number)+suffix
-
-def rename_to_numbers(filepaths):
-	if not filepaths:
+def number(paths):
+	if not paths:
 		return
-	folder=filepaths[0].parent
-	name_size=digit_count(len(filepaths))
+	same_max, images = count_same_times(sorted_with_timestamps(paths))
 	
-	new_filepaths=[folder/file_number_name(name_size, i+1, filepaths[i].suffix) for i in range(len(filepaths))]
-	files.rename(filepaths, new_filepaths, files.get_nonexisting_file_in(folder))
+	time_size = strnum.digits(images[-1][1])
+	ending_size = strnum.digits(same_max - 1, min_length = 0)
+
+	files.rename(paths, [path.with_stem(strnum.convert(timestamp, time_size) + strnum.convert(order, ending_size)) for path, timestamp, order in images])
